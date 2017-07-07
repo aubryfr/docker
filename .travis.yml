@@ -1,0 +1,38 @@
+language: ruby
+
+dist: trusty
+sudo: required
+
+cache:
+    apt: true
+
+env:
+    global:
+        - DOCKER_VERSION=17.06.0~ce-0~ubuntu
+    matrix:
+        - IMAGE_NAME=php TAG=5.6.30-apache FROM_FQIN=php:5.6.30-apache COMPOSER_VERSION=1.4.2 PRESTISSIMO_VERSION=0.3.7 PHPCSFIXER_VERSION=2.3.2 APCU_VERSION=4.0.8
+
+before_install:
+    - |
+        if [ "$(docker version -f '{{.Server.Version}}')|sed -e 's/-ce.*$//'" != "$(echo $DOCKER_VERSION|sed -e 's/~ce.*$//')" ] ; then
+            sudo apt-get -o Dpkg::Options::="--force-confnew" install -y docker-ce=${DOCKER_VERSION}
+        fi
+
+install:
+    - make -C $IMAGE_NAME pull
+    - if [ "$(bin/should-run-test.sh)" ]; then
+        travis_terminate 0;
+      fi
+
+script:
+    - make -C $IMAGE_NAME build test
+
+after_success:
+    - make -C $IMAGE_NAME tag images
+
+deploy:
+    provider: script
+    script: make -C $IMAGE_NAME push
+    skip_cleanup: true
+    on:
+        branch: master
