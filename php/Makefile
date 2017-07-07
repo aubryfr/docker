@@ -5,9 +5,6 @@ ITSELF:=$(lastword $(MAKEFILE_LIST))
 MAKEFILE_PATH:=$(abspath $(lastword $(TARGETS)))
 .DEFAULT_GOAL:=help
 
-include .env
-.env:
-
 help: ## This help
 	@grep -E '^[a-z A-Z_-]+:.*?## .*$$' $(TARGETS) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
@@ -19,11 +16,15 @@ pull: ## Pull docker image
 
 build: ## Build docker image. Use f=true to force
 	@if [ "$(shell docker image ls -q ${FQIN})" = "" ] || [ "${f}" = "true" ]; then \
-		docker build --build-arg FROM_FQIN=${FROM_FQIN} \
+		docker build --cache-from=inextensodigital/php:5.6.30-apach \
+					 --build-arg FROM_FQIN=${FROM_FQIN} \
 					 --build-arg COMPOSER_VERSION=${COMPOSER_VERSION} \
 					 --build-arg PRESTISSIMO_VERSION=${PRESTISSIMO_VERSION} \
 					 --build-arg PHPCSFIXER_VERSION=${PHPCSFIXER_VERSION} \
 					 --build-arg APCU_VERSION=${APCU_VERSION} \
+					 --build-arg REDIS_VERSION=${REDIS_VERSION} \
+					 --build-arg MEMCACHED_VERSION=${MEMCACHED_VERSION} \
+					 --build-arg IMAGICK_VERSION=${IMAGICK_VERSION} \
 					-t ${FQIN} .; \
 	fi
 
