@@ -8,6 +8,9 @@ MAKEFILE_PATH:=$(abspath $(lastword $(TARGETS)))
 help: ## This help
 	@grep -E '^[a-z A-Z_-]+:.*?## .*$$' $(TARGETS) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
+include .env
+.env:
+
 FQIN=inextensodigital/${IMAGE_NAME}:${TAG}
 LATEST=inextensodigital/${IMAGE_NAME}:latest
 
