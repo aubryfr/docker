@@ -23,7 +23,7 @@ zend.assertions=-1\n\
 " > /usr/local/etc/php/php.ini \
     && docker-php-source extract \
     && apt-get update \
-    && apt-get install -y git-core libicu-dev zlib1g-dev libpq-dev libxml2-dev libc-client-dev libkrb5-dev libmemcached-dev libmagickwand-dev \
+    && apt-get install -y git-core libicu-dev zlib1g-dev libpq-dev libxml2-dev libc-client-dev libkrb5-dev libmemcached-dev libmagickwand-dev libmcrypt-dev \
     && docker-php-ext-install opcache \
     && printf "\
 opcache.max_accelerated_files=16229\n\
@@ -50,8 +50,8 @@ opcache.fast_shutdown=1\n\
     && docker-php-ext-enable --ini-name 100-imagick.ini imagick \
     && pecl install redis-${REDIS_VERSION} \
     && docker-php-ext-enable --ini-name 100-redis.ini redis \
-    && apt-get remove -y libicu-dev icu-devtools zlib1g-dev libpq-dev libxml2-dev libc-client-dev libkrb5-dev libmemcached-dev libmagickwand-dev \
-    && apt-get install -y libicu52 libmagickwand-6.q16-2 libc-client2007e libmemcached11 libmemcachedutil2 libpq5 \
+    && apt-get remove -y libicu-dev icu-devtools zlib1g-dev libpq-dev libxml2-dev libc-client-dev libkrb5-dev libmemcached-dev libmagickwand-dev libmcrypt-dev \
+    && apt-get install -y libicu52 libmagickwand-6.q16-2 libc-client2007e libmemcached11 libmemcachedutil2 libpq5 libmcrypt4 \
     && docker-php-source delete \
     && mkdir -p /var/app ${COMPOSER_HOME} \
     && curl -sL https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer --version=${COMPOSER_VERSION} \
