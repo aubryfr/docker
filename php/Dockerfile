@@ -9,8 +9,7 @@ ARG MEMCACHED_VERSION
 ARG REDIS_VERSION
 ARG IMAGICK_VERSION
 
-ENV COMPOSER_HOME=/.composer \
-    PATH="$PATH:/.composer/vendor/bin"
+ENV PATH="$PATH:/root/.composer/vendor/bin"
 
 RUN env \
     && printf "\
@@ -53,17 +52,16 @@ opcache.fast_shutdown=1\n\
     && apt-get remove -y libicu-dev icu-devtools zlib1g-dev libpq-dev libxml2-dev libc-client-dev libkrb5-dev libmemcached-dev libmagickwand-dev libmcrypt-dev \
     && apt-get install -y libicu52 libmagickwand-6.q16-2 libc-client2007e libmemcached11 libmemcachedutil2 libpq5 libmcrypt4 \
     && docker-php-source delete \
-    && mkdir -p /var/app ${COMPOSER_HOME} \
+    && mkdir -p /var/app \
     && curl -sL https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer --version=${COMPOSER_VERSION} \
     && composer global require hirak/prestissimo:${PRESTISSIMO_VERSION} \
     && composer global require friendsofphp/php-cs-fixer:${PHPCSFIXER_VERSION} \
+    && composer clear-cache \
     && rm -rf \
-        ${COMPOSER_HOME}/cache \
         /tmp/* \
         /usr/share/doc \
         /usr/share/man \
         /usr/share/doc \
-        /var/cache/apk/* \
     && apt-get -y autoremove \
     && apt-get clean -y \
     && php -m
