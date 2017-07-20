@@ -19,12 +19,11 @@ pull: ## Pull docker image
 
 build: ## Build docker image. Use f=true to force
 	@if [ "$(shell docker image ls -q ${FQIN})" = "" ] || [ "${f}" = "true" ]; then \
-		docker build --cache-from=inextensodigital/php:5.6.30-apach \
+		docker build --cache-from=inextensodigital/php:5.6.30-apache \
 					 --build-arg FROM_FQIN=${FROM_FQIN} \
 					 --build-arg COMPOSER_VERSION=${COMPOSER_VERSION} \
 					 --build-arg PRESTISSIMO_VERSION=${PRESTISSIMO_VERSION} \
-					 --build-arg PHPCSFIXER_VERSION=${PHPCSFIXER_VERSION} \
-					 --build-arg APCU_VERSION=${APCU_VERSION} \
+					 --build-arg APCU_PACKAGE=${APCU_PACKAGE} \
 					 --build-arg REDIS_VERSION=${REDIS_VERSION} \
 					 --build-arg MEMCACHED_VERSION=${MEMCACHED_VERSION} \
 					 --build-arg IMAGICK_VERSION=${IMAGICK_VERSION} \
