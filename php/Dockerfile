@@ -72,6 +72,3 @@ RUN a2enmod vhost_alias \
     && a2ensite inextenso-digital
 
 WORKDIR /app
-
-CMD ["-D", "FOREGROUND"]
-ENTRYPOINT ["apachectl"]
