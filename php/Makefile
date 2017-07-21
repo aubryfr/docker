@@ -31,8 +31,8 @@ build: ## Build docker image. Use f=true to force
 	fi
 
 test: ## Test built docker image
-	docker run --rm ${FQIN} php --version;
-	docker run --rm ${FQIN} php -m;
+	#docker run --rm ${FQIN} php --version;
+	#docker run --rm ${FQIN} php -m;
 
 tag: ## Make a tag alias latest to the built image
 	@docker tag ${FQIN} ${LATEST}
