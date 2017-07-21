@@ -3,8 +3,7 @@ FROM ${FROM_FQIN}
 
 ARG COMPOSER_VERSION
 ARG PRESTISSIMO_VERSION
-ARG PHPCSFIXER_VERSION
-ARG APCU_VERSION
+ARG APCU_PACKAGE
 ARG MEMCACHED_VERSION
 ARG REDIS_VERSION
 ARG IMAGICK_VERSION
@@ -40,7 +39,7 @@ opcache.fast_shutdown=1\n\
         soap \
     && docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
     && docker-php-ext-install imap \
-    && printf "\n" |  printf "\n" | pecl install apcu-${APCU_VERSION} \
+    && printf "\n" |  printf "\n" | pecl install ${APCU_PACKAGE} \
     && docker-php-ext-enable --ini-name 100-apc.ini apcu apcu \
     && printf "\n" | pecl install memcached-${MEMCACHED_VERSION} \
     && docker-php-ext-enable --ini-name 100-memcached.ini memcached \
@@ -55,7 +54,6 @@ opcache.fast_shutdown=1\n\
     && mkdir -p /var/app \
     && curl -sL https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer --version=${COMPOSER_VERSION} \
     && composer global require hirak/prestissimo:${PRESTISSIMO_VERSION} \
-    && composer global require friendsofphp/php-cs-fixer:${PHPCSFIXER_VERSION} \
     && composer clear-cache \
     && rm -rf \
         /tmp/* \
