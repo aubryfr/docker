@@ -55,6 +55,7 @@ opcache.fast_shutdown=1\n\
     && curl -sL https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer --version=${COMPOSER_VERSION} \
     && composer global require hirak/prestissimo:${PRESTISSIMO_VERSION} \
     && composer clear-cache \
+    && mkdir -p /etc/apache2/sites-available \
     && rm -rf \
         /tmp/* \
         /usr/share/doc \
@@ -64,11 +65,19 @@ opcache.fast_shutdown=1\n\
     && apt-get clean -y \
     && php -m
 
-COPY apache-vhost.conf /etc/apache2/sites-available/inextenso-digital.conf
-
-RUN a2enmod vhost_alias \
+RUN if [ -n "${APACHE_CONFDIR}" ]; then \
+    a2enmod vhost_alias \
     && a2enmod rewrite \
     && a2dissite 000-default \
-    && a2ensite inextenso-digital
+    && a2ensite inextenso-digital; \
+    fi;
+
+RUN if [ -z "${APACHE_CONFDIR}" ]; then \
+    apt-get -y install python-setuptools collectd python-pip \
+    && mkdir /var/log/supervisor \
+    && easy_install supervisor; \
+    fi;
+
+COPY apache-vhost.conf /etc/apache2/sites-available/inextenso-digital.conf
 
 WORKDIR /app
