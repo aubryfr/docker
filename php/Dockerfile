@@ -65,6 +65,8 @@ opcache.fast_shutdown=1\n\
     && apt-get clean -y \
     && php -m
 
+COPY apache-vhost.conf /etc/apache2/sites-available/inextenso-digital.conf
+
 RUN if [ -n "${APACHE_CONFDIR}" ]; then \
     a2enmod vhost_alias \
     && a2enmod rewrite \
@@ -77,7 +79,5 @@ RUN if [ -z "${APACHE_CONFDIR}" ]; then \
     && mkdir /var/log/supervisor \
     && easy_install supervisor; \
     fi;
-
-COPY apache-vhost.conf /etc/apache2/sites-available/inextenso-digital.conf
 
 WORKDIR /app
