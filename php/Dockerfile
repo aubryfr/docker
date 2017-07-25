@@ -40,7 +40,7 @@ opcache.fast_shutdown=1\n\
     && docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
     && docker-php-ext-install imap \
     && printf "\n" |  printf "\n" | pecl install ${APCU_PACKAGE} \
-    && docker-php-ext-enable --ini-name 100-apc.ini apcu apc \
+    && docker-php-ext-enable --ini-name 100-apc.ini apcu \
     && printf "\n" | pecl install memcached-${MEMCACHED_VERSION} \
     && docker-php-ext-enable --ini-name 100-memcached.ini memcached \
     && apt-get install -y libmagickwand-dev \
@@ -50,8 +50,13 @@ opcache.fast_shutdown=1\n\
     && docker-php-ext-enable --ini-name 100-redis.ini redis \
     && apt-get remove -y libicu-dev icu-devtools zlib1g-dev libpq-dev libxml2-dev libc-client-dev libkrb5-dev libmemcached-dev libmagickwand-dev libmcrypt-dev \
     && apt-get install -y libicu52 libmagickwand-6.q16-2 libc-client2007e libmemcached11 libmemcachedutil2 libpq5 libmcrypt4 \
-    && docker-php-source delete \
-    && mkdir -p /home/www \
+    && docker-php-source delete
+
+RUN if [ "${APCU_PACKAGE}" = "apcu_bc-1.0.3" ]; then \
+    docker-php-ext-enable --ini-name 100-apc.ini apc; \
+    fi;
+
+RUN mkdir -p /home/www \
     && curl -sL https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer --version=${COMPOSER_VERSION} \
     && composer global require hirak/prestissimo:${PRESTISSIMO_VERSION} \
     && composer clear-cache \
