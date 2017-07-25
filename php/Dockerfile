@@ -40,7 +40,7 @@ opcache.fast_shutdown=1\n\
     && docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
     && docker-php-ext-install imap \
     && printf "\n" |  printf "\n" | pecl install ${APCU_PACKAGE} \
-    && docker-php-ext-enable --ini-name 100-apc.ini apcu apcu \
+    && docker-php-ext-enable --ini-name 100-apc.ini apcu apc \
     && printf "\n" | pecl install memcached-${MEMCACHED_VERSION} \
     && docker-php-ext-enable --ini-name 100-memcached.ini memcached \
     && apt-get install -y libmagickwand-dev \
